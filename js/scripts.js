@@ -8,7 +8,14 @@ $('document').ready(function() {
         url: 'https://randomuser.me/api/?results=12',
         dataType: 'json',
         success: function(data) {
-            console.log(data);
+            var response = data.results;
+            $.each(response, function(index, user) {
+                var image = user.picture.medium;
+                var fullName = `${user.name.first} ${user.name.last}`;
+                var email = user.email;
+                var location = user.location;
+                console.log(image, fullName, email, location);
+            });
         }
     });
 }); // end ready
