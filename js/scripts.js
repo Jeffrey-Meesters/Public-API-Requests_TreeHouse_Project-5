@@ -52,12 +52,17 @@ $('document').ready(function() {
         dataType: 'json',
         success: function(data) {
             var response = data.results;
+            console.log(response);
             $.each(response, function(index, user) {
                 var image = user.picture.medium;
-                var fullName = `${user.name.first} ${user.name.last}`;
+                var firstName = user.name.first;
+                var lastName = user.name.last;
+                var fullName = `${firstName} ${lastName}`;
                 var email = user.email;
                 var location = user.location;
-                console.log(image, fullName, email, location);
+                var cellNumber = user.cell;
+                var dob = user.dob.date;
+                console.log(image, firstName, lastName, fullName, email, location, cellNumber, dob);
             });
         }
     });
