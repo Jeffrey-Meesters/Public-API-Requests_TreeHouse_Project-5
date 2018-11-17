@@ -31,19 +31,19 @@ $('document').ready(function() {
         </div>
     `);
 
-    // Use ajax to do make a request to the ranomuser api
-    // In the docs I found that I can use the 'results' as a query string
-    // to set a limit on the amount of random users I want for this
-    // project we need 12 users
-    function requestRandomUsers(callback) {
-        $.ajax({
-            url: 'https://randomuser.me/api/?results=12',
-            dataType: 'json',
-            success: function (data) {
-                var response = data.results;
-                callback(response);
-            }
-        });
+    function addEventListeners(data) {
+        console.log(data);
+        $('.card').click(function(event) {
+            var clickedCard = event.target.closest('.card');
+            var userName = $(clickedCard).find('#name')[0].innerText.toLowerCase();
+
+            $.each(data, function(index, user) {
+                console.log(userName, `${user.name.first} ${user.name.last}`);
+                if (userName === `${user.name.first} ${user.name.last}`) {
+                    console.log(user);
+                }
+            })
+        })
     }
 
     function buildUserCard(data) {
@@ -64,6 +64,27 @@ $('document').ready(function() {
         });
 
         $('.gallery').html(cards);
+
+        // ass the cards are now loaded we are ready to append event listeners
+        addEventListeners(data);
+    }
+
+    // Use ajax to do make a request to the ranomuser api
+    // In the docs I found that I can use the 'results' as a query string
+    // to set a limit on the amount of random users I want for this
+    // project we need 12 users
+    function requestRandomUsers(callback) {
+        $.ajax({
+            url: 'https://randomuser.me/api/?results=12',
+            dataType: 'json',
+            success: function (data) {
+                var response = data.results;
+                callback(response);
+            },
+            fail: function(error) {
+                alert(error)
+            }
+        });
     }
 
     //I forgot how to use a callback pattern with ajax:
