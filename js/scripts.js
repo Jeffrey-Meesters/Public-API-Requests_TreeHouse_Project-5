@@ -6,18 +6,6 @@ $('document').ready(function() {
         </form>
     `);
 
-    $('#gallery').html(`
-        <div class="card">
-            <div class="card-img-container">
-                <img class="card-img" src="https://placehold.it/90x90" alt="profile picture">
-            </div>
-            <div class="card-info-container">
-                <h3 id="name" class="card-name cap">first last</h3>
-                <p class="card-text">email</p>
-                <p class="card-text cap">city, state</p>
-            </div>
-        </div>
-    `);
 
     $('body').append(`
         <div class="modal-container">
@@ -47,23 +35,38 @@ $('document').ready(function() {
     // In the docs I found that I can use the 'results' as a query string
     // to set a limit on the amount of random users I want for this
     // project we need 12 users
-    $.ajax({
-        url: 'https://randomuser.me/api/?results=12',
-        dataType: 'json',
-        success: function(data) {
-            var response = data.results;
-            console.log(response);
-            $.each(response, function(index, user) {
-                var image = user.picture.medium;
-                var firstName = user.name.first;
-                var lastName = user.name.last;
-                var fullName = `${firstName} ${lastName}`;
-                var email = user.email;
-                var location = user.location;
-                var cellNumber = user.cell;
-                var dob = user.dob.date;
-                console.log(image, firstName, lastName, fullName, email, location, cellNumber, dob);
-            });
-        }
-    });
+    function requestRandomUsers(callback) {
+        $.ajax({
+            url: 'https://randomuser.me/api/?results=12',
+            dataType: 'json',
+            success: function (data) {
+                var response = data.results;
+                callback(response);
+            }
+        });
+    }
+
+    function buildUserCard(data) {
+        var cards = '';
+        $.each(data, function (index, user) {
+            var card = `<div class="card">
+                            <div class="card-img-container">
+                                <img class="card-img" src=${user.picture.large} alt="profile picture">
+                            </div>
+                            <div class="card-info-container">
+                                <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
+                                <p class="card-text">${user.email}</p>
+                                <p class="card-text cap">${user.location.city} ${user.location.state}</p>
+                            </div>
+                        </div>`;
+
+            cards += card;
+        });
+
+        $('.gallery').html(cards);
+    }
+
+    //I forgot how to use a callback pattern with ajax:
+    // https://stackoverflow.com/questions/14220321/how-do-i-return-the-response-from-an-asynchronous-call/14220323#14220323?newreg=8eafe58d038840dcb9cf8920995f83f9
+    requestRandomUsers(buildUserCard);
 }); // end ready
