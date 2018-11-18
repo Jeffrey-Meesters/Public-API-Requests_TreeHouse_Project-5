@@ -48,8 +48,21 @@ $('document').ready(function() {
                                     </div>`;
                     // http://api.jquery.com/insertafter/
                     $(modalInner).insertAfter( "#modal-close-btn" );
-                    $('#modal-prev').attr('data-prev', (index - 1));
-                    $('#modal-next').attr('data-next', (index + 1));
+
+                    if ((index -1) === -1) {
+                        $('#modal-prev').prop('disabled', true);
+                    } else {
+                        $('#modal-prev').prop('disabled', false);
+                        $('#modal-prev').attr('data-prev', (index - 1));
+                    }
+
+                    if ((index + 1) === 12) {
+                        $('#modal-next').prop('disabled', true);
+                    } else {
+                        $('#modal-next').prop('disabled', false);
+                        $('#modal-next').attr('data-next', (index + 1));
+                    }
+
                     $('.modal-container').show();
                 }
             })
@@ -98,17 +111,26 @@ $('document').ready(function() {
     // https://stackoverflow.com/questions/14220321/how-do-i-return-the-response-from-an-asynchronous-call/14220323#14220323?newreg=8eafe58d038840dcb9cf8920995f83f9
     requestRandomUsers(buildUserCard);
 
-    function resetModal() {
+    function resetModal(hideModal) {
         $('.modal-info-container').remove();
-        $('.modal-container').hide();
+
+        if (hideModal) {
+            $('.modal-container').hide();
+        }
     };
 
     function triggerClickOnCard(number) {
-        console.log(number);
+        var cardNumber = Number(number);
+        var cards = $('.card');
+
+        if (cardNumber > -1 && cardNumber < 12) {
+            resetModal(false);
+            $(cards[cardNumber]).trigger('click');
+        }
     }
 
     $('#modal-close-btn').click(function() {
-        resetModal();
+        resetModal(true);
     });
 
     $('#modal-prev').click(function(event){
