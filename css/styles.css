@@ -66,7 +66,9 @@ header h1 {
 /* =====================================
    Gallery
 ======================================== */
-
+/*I was watching a YT video about perspective in css and wanted that as well*/
+/*So looked up and example to see how it works: https://codepen.io/HugoGiraudel/pen/fvopl*/
+/*now with some shadow the cards seem to flip a bit*/
 .gallery {
     display: flex;
     flex-direction: row;
