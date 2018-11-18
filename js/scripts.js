@@ -11,19 +11,8 @@ $('document').ready(function() {
         <div class="modal-container">
             <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-                <div class="modal-info-container">
-                    <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
-                    <h3 id="name" class="modal-name cap">name</h3>
-                    <p class="modal-text">email</p>
-                    <p class="modal-text cap">city</p>
-                    <hr>
-                    <p class="modal-text">(555) 555-5555</p>
-                    <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                    <p class="modal-text">Birthday: 10/21/2015</p>
-                </div>
-            </div>
-
-            // IMPORTANT: Below is only for exceeds tasks
+           </div>
+           // IMPORTANT: Below is only for exceeds tasks
             <div class="modal-btn-container">
                 <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
                 <button type="button" id="modal-next" class="modal-next btn">Next</button>
@@ -31,16 +20,37 @@ $('document').ready(function() {
         </div>
     `);
 
+    function createDob(date) {
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring
+        var year = date.substring(0, 4);
+        var month = date.substring(5, 7);
+        var day = date.substring(8, 10);
+        return `${year}-${month}-${day}`;
+    }
+
     function addEventListeners(data) {
-        console.log(data);
         $('.card').click(function(event) {
             var clickedCard = event.target.closest('.card');
             var userName = $(clickedCard).find('#name')[0].innerText.toLowerCase();
 
             $.each(data, function(index, user) {
-                console.log(userName, `${user.name.first} ${user.name.last}`);
                 if (userName === `${user.name.first} ${user.name.last}`) {
-                    console.log(user);
+                    var dob = createDob(user.dob.date);
+                    var modalInner = `<div class="modal-info-container">
+                                        <img class="modal-img" src=${user.picture.large} alt="profile picture">
+                                        <h3 id="name" class="modal-name cap">${user.name.first}</h3>
+                                        <p class="modal-text">${user.email}</p>
+                                        <p class="modal-text cap">${user.location.city}</p>
+                                        <hr>
+                                        <p class="modal-text">${user.phone}</p> <!--(555) 555-5555-->
+                                        <p class="modal-text">${user.location.street}, ${user.location.city}, ${user.location.postcode}</p>
+                                        <p class="modal-text">Birthday: ${dob}</p>
+                                    </div>`;
+                    // http://api.jquery.com/insertafter/
+                    $(modalInner).insertAfter( "#modal-close-btn" );
+                    $('#modal-prev').attr('data-prev', (index - 1));
+                    $('#modal-next').attr('data-next', (index + 1));
+                    $('.modal-container').show();
                 }
             })
         })
@@ -80,9 +90,6 @@ $('document').ready(function() {
             success: function (data) {
                 var response = data.results;
                 callback(response);
-            },
-            fail: function(error) {
-                alert(error)
             }
         });
     }
@@ -90,4 +97,25 @@ $('document').ready(function() {
     //I forgot how to use a callback pattern with ajax:
     // https://stackoverflow.com/questions/14220321/how-do-i-return-the-response-from-an-asynchronous-call/14220323#14220323?newreg=8eafe58d038840dcb9cf8920995f83f9
     requestRandomUsers(buildUserCard);
+
+    function resetModal() {
+        $('.modal-info-container').remove();
+        $('.modal-container').hide();
+    };
+
+    function triggerClickOnCard(number) {
+        console.log(number);
+    }
+
+    $('#modal-close-btn').click(function() {
+        resetModal();
+    });
+
+    $('#modal-prev').click(function(event){
+        triggerClickOnCard(event.target.dataset.prev);
+    });
+
+    $('#modal-next').click(function(event){
+        triggerClickOnCard(event.target.dataset.next);
+    });
 }); // end ready
