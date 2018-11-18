@@ -3,6 +3,7 @@
 ======================================== */
 
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Sedgwick+Ave');
 
 * {
 	box-sizing: border-box;
@@ -66,9 +67,9 @@ header h1 {
 /* =====================================
    Gallery
 ======================================== */
-/*I was watching a YT video about perspective in css and wanted that as well*/
-/*So looked up and example to see how it works: https://codepen.io/HugoGiraudel/pen/fvopl*/
-/*now with some shadow the cards seem to flip a bit*/
+/* I was watching a YT video about perspective in css and wanted that as well*/
+/* So looked up and example to see how it works: https://codepen.io/HugoGiraudel/pen/fvopl*/
+/* now with some shadow and transforms the cards seem to flip a bit*/
 .gallery {
     display: flex;
     flex-direction: row;
@@ -77,7 +78,7 @@ header h1 {
     width: 100%;
     max-width: 1200px;
     margin: auto;
-    transform: perspective(1000px);
+    perspective: 1800px;
 }
 
 .card {
@@ -242,6 +243,15 @@ header h1 {
 
     .search-container {
         margin-top: 25px;
+        position: relative;
+    }
+    .reset-btn {
+        display: none;
+        position: absolute;
+        left: -55px;
+        height: 33px;
+        border-radius: 3px;
+        color: #454545;
     }
 
     .modal {
@@ -254,9 +264,13 @@ header h1 {
    Desktop
    Hover styles on desktop
 ======================================== */
+/*I want so support hover on everything bigger than mobile landscape*/
+/*I'm developing on a 13" laptop with dev-tools open and it annoys me that the hover effect is not shown :p*/
+@media (min-width: 768px) {
 
-@media (min-width: 1024px) {
-
+    header h1:hover {
+        font-size: 23px;
+    }
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+0,8f0222+44,6d0019+100;Brown+Red+3D */
     .card:hover {
         box-shadow: none;
@@ -268,6 +282,11 @@ header h1 {
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 ); /* IE6-9 */
         border: 1px solid rgba(50, 50, 50, 0.9);
         color: #fff;
+    }
+
+    header h1:hover,
+    .card:hover .card-name {
+        font-family: 'Sedgwick Ave', cursive;
     }
 
     .card:hover .card-text {
